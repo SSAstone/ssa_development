@@ -1,15 +1,23 @@
-import About from "@/components/home/about";
+import { Hero } from "@/components/home/Hero";
+import { Services } from "@/components/home/Services";
+import { Products } from "@/components/home/Products";
+import { Portfolio } from "@/components/home/Portfolio";
+import { Technologies } from "@/components/home/Technologies";
+import { Contact } from "@/components/home/Contact";
 import Banner from "@/components/home/banner";
-import Services from "@/components/home/services";
+import NewServices from "@/components/home/new_services";
 
 export default function Home() {
   return (
-    // <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-    <main className="">
+    <div className="flex flex-col gap-0 w-full min-h-screen">
       <Banner />
-      <Services />
-      <About />
-    </main>
-    // </div>
+      <NewServices />
+      {/* <Hero /> */}
+      {/* <Services /> */}
+      <Products />
+      <Portfolio />
+      <Technologies />
+      <Contact />
+    </div>
   );
 }
