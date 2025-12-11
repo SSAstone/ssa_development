@@ -1,8 +1,8 @@
 "use client"
 
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Code, Globe, Smartphone, BrainCircuit, ShieldCheck, Cloud } from "lucide-react";
+import { Code, Globe, Smartphone, BrainCircuit } from "lucide-react";
 
 const logos = [
     { name: 'PayPal', icon: 'P' },
