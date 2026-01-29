@@ -1,20 +1,24 @@
+"use client";
+
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 export function Navbar() {
+    const pathname = usePathname();
     const navLinks = [
-        { name: "Services", href: "#services" },
-        { name: "Products", href: "#products" },
+        { name: "Services", href: "/services" },
+        { name: "Products", href: "/products" },
         { name: "Portfolio", href: "#portfolio" },
         { name: "Technologies", href: "#technologies" },
-        { name: "Contact", href: "#contact" },
+        { name: "Contact", href: "/contact" },
     ];
 
     return (
-        <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-background/60 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60">
-            <div className="container mx-auto flex h-16 items-center justify-between px-4">
+        <header className={`sticky top-0 z-50 w-full border-b border-white/10 bg-background/60 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60 ${(pathname.includes("admin")) ? "hidden" : ""}`}>
+            <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-0">
                 {/* Logo */}
                 <Link href="/" className="flex items-center gap-2">
                     <div className="size-8 rounded-lg bg-primary/20 flex items-center justify-center">

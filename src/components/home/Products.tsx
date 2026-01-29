@@ -29,7 +29,7 @@ const products = [
 export function Products() {
     return (
         <section id="products" className="py-24 bg-background border-t border-border/50">
-            <div className="container mx-auto px-4">
+            <div className="container mx-auto px-4 md:px-0">
                 <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
                     <div className="max-w-xl">
                         <h2 className="text-3xl font-bold tracking-tight sm:text-4xl mb-4">Our Products</h2>

@@ -1,8 +1,13 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export function Footer() {
+    const pathname = usePathname();
+
     return (
-        <footer className="border-t border-white/10 bg-background/50 backdrop-blur-xl py-12 mt-20">
+        <footer className={`border-t border-white/10 bg-background/50 backdrop-blur-xl py-12 mt-20 ${(pathname.includes("admin")) ? "hidden" : ""}`}>
             <div className="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-6">
                 <div className="flex flex-col gap-2">
                     <Link href="/" className="flex items-center gap-2">
