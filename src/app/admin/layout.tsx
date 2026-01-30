@@ -14,6 +14,7 @@ import {
     SidebarProvider,
     SidebarTrigger,
 } from "@/components/ui/sidebar"
+import { Button } from "@/components/ui/button"
 
 import {
     AudioWaveform,
@@ -33,25 +34,15 @@ import { usePathname } from "next/navigation"
 
 const data = {
     user: {
-        name: "shadcn",
-        email: "m@example.com",
-        avatar: "/avatars/shadcn.jpg",
+        name: "@future admin",
+        email: "admin@atfuture.com",
+        avatar: "/avatars/admin.jpg",
     },
     teams: [
         {
-            name: "Acme Inc",
+            name: "@future IT",
             logo: GalleryVerticalEnd,
-            plan: "Enterprise",
-        },
-        {
-            name: "Acme Corp.",
-            logo: AudioWaveform,
-            plan: "Startup",
-        },
-        {
-            name: "Evil Corp.",
-            logo: Command,
-            plan: "Free",
+            plan: "Pro Enterprise",
         },
     ]
 }
@@ -77,7 +68,7 @@ const menu: MenuProps[] = [
     {
         label: "Dashboard",
         icon: LayoutDashboard,
-        href: "/dashboard/admin",
+        href: "/admin",
     },
     {
         label: "Projects",
@@ -124,25 +115,25 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     return (
         <SidebarProvider>
             <AppSidebar menu={menu} data={data} />
-            <SidebarInset>
-                <div className="fixed top-0 w-full z-50 bg-background">
-                    <div className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
-                        <div className="flex items-center gap-2 px-4 w-full">
-                            <SidebarTrigger className="-ml-1" />
-                            <Separator orientation="vertical" className="mr-2 h-4" />
+            <SidebarInset className="flex flex-col min-h-screen">
+                <header className="sticky top-0 z-40 w-full border-b bg-background/80 backdrop-blur-md transition-all duration-200">
+                    <div className="flex h-16 items-center gap-4 px-6 shrink-0">
+                        <div className="flex items-center gap-4 w-full">
+                            <SidebarTrigger className="-ml-1 text-muted-foreground hover:text-foreground transition-colors" />
+                            <Separator orientation="vertical" className="h-6 w-px bg-border/60" />
                             <Breadcrumb className="flex-1">
                                 <BreadcrumbList>
                                     {activeNavItem && (
                                         <>
                                             <BreadcrumbItem>
-                                                <BreadcrumbLink href={activeNavItem.href}>
+                                                <BreadcrumbLink href={activeNavItem.href} className="text-muted-foreground hover:text-primary transition-colors">
                                                     {activeNavItem.label}
                                                 </BreadcrumbLink>
                                             </BreadcrumbItem>
                                             {activeNavItem?.href !== path && <>
                                                 <BreadcrumbSeparator />
                                                 <BreadcrumbItem>
-                                                    <BreadcrumbPage>
+                                                    <BreadcrumbPage className="font-medium">
                                                         {activeNavItem?.href === path ? activeNavItem.label : activeNavItem?.items?.find(item => item.href === path)?.label}
                                                     </BreadcrumbPage>
                                                 </BreadcrumbItem>
@@ -151,13 +142,27 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                                     )}
                                 </BreadcrumbList>
                             </Breadcrumb>
+                            <div className="flex items-center gap-4 ml-auto px-4">
+                                <div className="relative hidden md:block">
+                                    <input
+                                        type="text"
+                                        placeholder="Search..."
+                                        className="h-9 w-64 rounded-md border border-input bg-muted/50 px-3 py-1 text-sm shadow-sm transition-all focus:bg-background focus:ring-1 focus:ring-primary outline-none"
+                                    />
+                                </div>
+                                <Button variant="ghost" size="icon" className="relative">
+                                    <Bell className="size-5" />
+                                    <span className="absolute top-2 right-2 size-2 bg-primary rounded-full ring-2 ring-background"></span>
+                                </Button>
+                            </div>
                         </div>
                     </div>
-                    <Separator orientation="horizontal" className="w-full" />
-                </div>
-                <div className="pt-20 flex flex-1 flex-col gap-4 p-4 bg-muted">
-                    {children}
-                </div>
+                </header>
+                <main className="flex flex-1 flex-col gap-6 p-6 bg-muted/40 animate-in fade-in duration-500">
+                    <div className="">
+                        {children}
+                    </div>
+                </main>
             </SidebarInset>
         </SidebarProvider>
     )

@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/sidebar"
 import { usePathname } from "next/navigation"
 import Link from "next/link"
-import { MenuProps } from "@/app/dashboard/admin/layout"
+import { MenuProps } from "@/app/admin/layout"
 
 export function NavMain({
   items,

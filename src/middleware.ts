@@ -16,8 +16,6 @@ export async function middleware(req: NextRequest) {
     const path = req.nextUrl.pathname;
     const session = req.cookies.get("session")?.value;
 
-    console.log("session----", session);
-
     const protectedRoutes = [
         "/dashboard/student",
         "/dashboard/teacher",
@@ -29,8 +27,6 @@ export async function middleware(req: NextRequest) {
         path.startsWith(route)
     );
 
-    console.log("isProtected----", isProtected);
-
     if (!isProtected) return NextResponse.next();
 
     if (!session) {
@@ -38,8 +34,6 @@ export async function middleware(req: NextRequest) {
     }
 
     const payload: any = await verify(session);
-
-    console.log("payload----", payload);
 
     if (!payload) {
         return NextResponse.redirect(new URL("/login", req.url));
