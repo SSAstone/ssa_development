@@ -85,6 +85,11 @@ const menu: MenuProps[] = [
         href: "/admin/projects",
     },
     {
+        label: "Products",
+        icon: Bot,
+        href: "/admin/product",
+    },
+    {
         label: "Services",
         icon: TextAlignCenter,
         href: "/admin/services",
