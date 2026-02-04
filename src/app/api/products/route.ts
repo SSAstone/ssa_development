@@ -14,7 +14,7 @@ import { NextResponse } from "next/server";
 import { getProducts } from "@/actions/product";
 
 const corsHeaders = {
-    "Access-Control-Allow-Origin": "http://localhost:3000",
+    "Access-Control-Allow-Origin": "*",
     // use "*" only if this is a public API
     "Access-Control-Allow-Methods": "GET, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type, Authorization",
