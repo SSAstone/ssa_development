@@ -1,18 +1,18 @@
 "use client";
 
 import React, { useTransition } from "react";
-import { useForm, useFieldArray, Control } from "react-hook-form";
+import { useForm, useFieldArray, Control, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { productFormSchema, ProductFormValues } from "@/lib/validations";
 import { createProductAction, updateProductAction } from "@/actions/product";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Plus, Trash2, ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { Editor } from "@/components/ui/editor";
 
 interface ProductFormProps {
     initialData?: ProductFormValues;
@@ -95,12 +95,17 @@ export default function ProductForm({ initialData, productId }: ProductFormProps
                 </div>
 
                 <div className="space-y-2">
-                    <Label htmlFor="description">Description</Label>
-                    <Textarea
-                        id="description"
-                        {...register("description")}
-                        placeholder="Describe your product..."
-                        className={errors.description ? "border-red-500" : ""}
+                    <Label htmlFor="description">Description (Rich Text)</Label>
+                    <Controller
+                        name="description"
+                        control={control}
+                        render={({ field }) => (
+                            <Editor
+                                value={field.value}
+                                onChange={field.onChange}
+                                placeholder="Describe your product with rich formatting..."
+                            />
+                        )}
                     />
                     {errors.description && <p className="text-red-500 text-sm">{errors.description.message}</p>}
                 </div>
@@ -208,10 +213,17 @@ function ProductItemSection({ index, control, register, remove, errors }: any) {
                                     placeholder="Title"
                                     className="h-8 text-sm"
                                 />
-                                <Textarea
-                                    {...register(`productItems.${index}.content.${cIndex}.body`)}
-                                    placeholder="Body text"
-                                    className="text-sm min-h-[60px]"
+                                <Controller
+                                    name={`productItems.${index}.content.${cIndex}.body`}
+                                    control={control}
+                                    render={({ field }) => (
+                                        <Editor
+                                            value={field.value}
+                                            onChange={field.onChange}
+                                            placeholder="Write content body..."
+                                            className="min-h-[100px]"
+                                        />
+                                    )}
                                 />
                             </div>
                             <Button
@@ -300,10 +312,17 @@ function NestedContentSection({ itemIndex, parentIndex, control, register }: any
                             placeholder="Sub-title"
                             className="h-7 text-[12px] bg-white"
                         />
-                        <Textarea
-                            {...register(`productItems.${parentIndex}.items.${itemIndex}.content.${index}.body`)}
-                            placeholder="Sub-body"
-                            className="text-[12px] min-h-[40px] bg-white"
+                        <Controller
+                            name={`productItems.${parentIndex}.items.${itemIndex}.content.${index}.body`}
+                            control={control}
+                            render={({ field }) => (
+                                <Editor
+                                    value={field.value}
+                                    onChange={field.onChange}
+                                    placeholder="Sub-body content..."
+                                    className="min-h-[80px] text-xs"
+                                />
+                            )}
                         />
                     </div>
                     <Button type="button" variant="ghost" size="sm" onClick={() => remove(index)}>

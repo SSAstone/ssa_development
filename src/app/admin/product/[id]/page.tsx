@@ -32,7 +32,6 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
                 </Button>
                 <div>
                     <h1 className="text-3xl font-bold tracking-tight">{product.title}</h1>
-                    {/* <p className="text-muted-foreground">Product ID: {product.id}</p> */}
                 </div>
                 <div className="ml-auto">
                     <Button asChild variant="outline">
@@ -44,10 +43,8 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
             </div>
 
             <div className="grid gap-6 md:grid-cols-3">
-                <div className="">
-
-                    <Card className="md:col-span-1">
-
+                <div className="md:col-span-1 space-y-6">
+                    <Card>
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
                                 <Package className="h-5 w-5 text-primary" />
@@ -56,8 +53,11 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <div>
-                                <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Description</h4>
-                                <p className="mt-1 text-sm">{product.description}</p>
+                                <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-2">Description</h4>
+                                <div
+                                    className="prose prose-sm dark:prose-invert max-w-none"
+                                    dangerouslySetInnerHTML={{ __html: product.description }}
+                                />
                             </div>
                             <Separator />
                             <div className="flex justify-between text-sm">
@@ -71,6 +71,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
                         </CardContent>
                     </Card>
                 </div>
+
                 <div className="md:col-span-2 space-y-6">
                     <h2 className="text-xl font-semibold flex items-center gap-2">
                         <ListTree className="h-5 w-5 text-primary" />
@@ -86,7 +87,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
                     ) : (
                         product.productItems.map((item: any) => (
                             <Card key={item.id} className="border-l-4 border-l-primary">
-                                <CardHeader className='pb-0 gap-0'>
+                                <CardHeader className='pb-4'>
                                     <div className="flex items-center justify-between">
                                         <CardTitle className="text-lg">{item.label}</CardTitle>
                                         <Badge variant="secondary">Item #{item.id}</Badge>
@@ -102,8 +103,11 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
                                             <div className="grid gap-4">
                                                 {item.content.map((c: any, i: number) => (
                                                     <div key={i} className="p-4 rounded-lg bg-muted/50 border border-muted">
-                                                        <h5 className="font-semibold text-sm mb-1">{c.title}</h5>
-                                                        <p className="text-sm text-muted-foreground whitespace-pre-wrap">{c.body}</p>
+                                                        <h5 className="font-semibold text-sm mb-2">{c.title}</h5>
+                                                        <div
+                                                            className="prose prose-sm dark:prose-invert max-w-none text-muted-foreground"
+                                                            dangerouslySetInnerHTML={{ __html: c.body }}
+                                                        />
                                                     </div>
                                                 ))}
                                             </div>
@@ -121,11 +125,14 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
                                                             <div className="h-1.5 w-1.5 rounded-full bg-primary" />
                                                             {subItem.label}
                                                         </h5>
-                                                        <div className="grid gap-2 pl-4">
+                                                        <div className="grid gap-4 pl-4">
                                                             {subItem.content.map((sc: any, si: number) => (
-                                                                <div key={si} className="text-sm">
-                                                                    <span className="font-semibold">{sc.title}: </span>
-                                                                    <span className="text-muted-foreground">{sc.body}</span>
+                                                                <div key={si} className="space-y-1">
+                                                                    <div className="font-semibold text-xs text-muted-foreground">{sc.title}</div>
+                                                                    <div
+                                                                        className="prose prose-sm dark:prose-invert max-w-none text-sm text-foreground"
+                                                                        dangerouslySetInnerHTML={{ __html: sc.body }}
+                                                                    />
                                                                 </div>
                                                             ))}
                                                         </div>
