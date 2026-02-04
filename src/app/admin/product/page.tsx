@@ -41,7 +41,12 @@ export default async function Page() {
                         <Card key={p.id} className="overflow-hidden hover:shadow-md transition-shadow">
                             <CardHeader className="bg-muted/30 pb-4">
                                 <CardTitle>{p.title}</CardTitle>
-                                <CardDescription className="line-clamp-2">{p.description}</CardDescription>
+                                <CardDescription className="line-clamp-2">
+                                    <div
+                                        className="prose prose-sm dark:prose-invert max-w-none"
+                                        dangerouslySetInnerHTML={{ __html: p.description }}
+                                    />
+                                </CardDescription>
                             </CardHeader>
                             <CardContent className="pt-4 flex justify-between items-center">
                                 <span className="text-xs text-muted-foreground">
