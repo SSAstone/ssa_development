@@ -25,7 +25,7 @@ export function Navbar() {
                         <div className="size-8 rounded-lg bg-primary/20 flex items-center justify-center">
                             <span className="text-xl font-bold text-primary">@</span>
                         </div>
-                        <span className="text-xl font-bold tracking-tight">future</span>
+                        <span className="text-xl font-bold tracking-tight text-primary">future</span>
                     </Link>
 
                     {/* Desktop Navigation */}
