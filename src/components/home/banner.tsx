@@ -27,7 +27,19 @@ function CanvasFunction() {
         <div className="h-screen w-full text-center">
             <div className="z-50 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                 <div className="text-mainColor md:block notranslate mt-24">
-                    <h1 className="text-4xl font-bold">Transforming Ideas into <br className="hidden md:block" />
+                    <p className='flex gap-1'>Transforming Ideas into <span className="text-primary"><Typewriter
+                        options={{
+                            strings: [
+                                "Web Development",
+                                "Mobile App Development",
+                                "Custom Software",
+                                "Game Development",
+                            ],
+                            autoStart: true,
+                            loop: true,
+                        }}
+                    /></span></p>
+                    {/* <h1 className="text-4xl font-bold">Transforming Ideas into <br className="hidden md:block" />
                         <span className="text-primary">Digital Reality</span>
                     </h1>
                     <Typewriter
@@ -42,7 +54,7 @@ function CanvasFunction() {
                             autoStart: true,
                             loop: true,
                         }}
-                    />
+                    /> */}
                 </div>
             </div>
             <Canvas camera={{ position: [0, 0, 5] }}>
