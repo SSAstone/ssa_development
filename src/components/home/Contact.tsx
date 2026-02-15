@@ -6,18 +6,18 @@ import { Mail, MapPin, Phone } from "lucide-react";
 
 export function Contact() {
     return (
-        <div className={"dark contents"}>
-            <section id="contact" className="py-24 bg-background">
+        <div className={""}>
+            <section id="contact" className="py-24">
                 <div className="container mx-auto px-4">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
                         {/* Contact Info */}
                         <div>
-                            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl mb-6">Get in Touch</h2>
-                            <p className="text-muted-foreground text-lg mb-8">
+                            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl mb-4">Get in Touch</h2>
+                            <p className="text-muted-foreground text-lg mb-12">
                                 Ready to start your next project? Contact us today to discuss your requirements and how we can help you achieve your goals.
                             </p>
 
-                            <div className="space-y-6">
+                            <div className="space-y-8">
                                 <div className="flex items-center gap-4">
                                     <div className="size-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
                                         <Mail className="size-5" />
@@ -54,22 +54,22 @@ export function Contact() {
                         <div className="bg-card border border-border rounded-xl p-8 shadow-sm">
                             <form className="space-y-6">
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                    <div className="space-y-2">
+                                    <div className="space-y-3">
                                         <Label htmlFor="first-name">First name</Label>
                                         <Input id="first-name" placeholder="John" />
                                     </div>
-                                    <div className="space-y-2">
+                                    <div className="space-y-3">
                                         <Label htmlFor="last-name">Last name</Label>
                                         <Input id="last-name" placeholder="Doe" />
                                     </div>
                                 </div>
 
-                                <div className="space-y-2">
+                                <div className="space-y-3">
                                     <Label htmlFor="email">Email</Label>
                                     <Input id="email" type="email" placeholder="john@example.com" />
                                 </div>
 
-                                <div className="space-y-2">
+                                <div className="space-y-3">
                                     <Label htmlFor="message">Message</Label>
                                     <Textarea
                                         id="message"

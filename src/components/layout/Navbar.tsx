@@ -10,9 +10,10 @@ export function Navbar() {
     const pathname = usePathname();
     const navLinks = [
         { name: "Services", href: "/services" },
-        { name: "Products", href: "/products" },
-        { name: "Portfolio", href: "#portfolio" },
-        { name: "Technologies", href: "#technologies" },
+        // { name: "Products", href: "/products" },
+        { name: "Projects", href: "/projects" },
+        // { name: "Portfolio", href: "#portfolio" },
+        // { name: "Technologies", href: "#technologies" },
         { name: "Contact", href: "/contact" }
     ];
 
@@ -22,10 +23,10 @@ export function Navbar() {
                 <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-0">
                     {/* Logo */}
                     <Link href="/" className="flex items-center gap-2">
-                        <div className="size-8 rounded-lg bg-primary/20 flex items-center justify-center">
-                            <span className="text-xl font-bold text-primary">@</span>
+                        <div className="px-2 rounded-lg bg-primary/20 flex items-center justify-center">
+                            <span className="text-xl font-bold text-primary">SSA</span>
                         </div>
-                        <span className="text-xl font-bold tracking-tight text-primary">future</span>
+                        {/* <span className="text-xl font-bold tracking-tight text-primary">future</span> */}
                     </Link>
 
                     {/* Desktop Navigation */}

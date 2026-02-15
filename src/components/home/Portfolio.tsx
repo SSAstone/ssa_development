@@ -31,7 +31,7 @@ const projects = [
 
 export function Portfolio() {
     return (
-        <section id="portfolio" className="py-24 bg-muted/20">
+        <section id="products" className="py-24 bg-background border-t border-border/50">
             <div className="container mx-auto px-4">
                 <div className="flex flex-col items-center text-center mb-16">
                     <span className="text-primary font-medium tracking-wider uppercase text-sm mb-2">Our Work</span>
@@ -57,7 +57,7 @@ export function Portfolio() {
                                     <p className="text-muted-foreground mb-4 line-clamp-2 opacity-80 group-hover:opacity-100 transition-opacity">
                                         {project.description}
                                     </p>
-                                    <Button variant="link" className="p-0 h-auto text-primary gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100">
+                                    <Button variant="link" className="!p-0 h-auto text-primary gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100">
                                         View Case Study <ArrowUpRight className="size-4" />
                                     </Button>
                                 </div>

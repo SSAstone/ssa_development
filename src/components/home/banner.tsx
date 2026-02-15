@@ -85,7 +85,7 @@ interface TextProps {
 function TextComponent({ config }: TextProps) {
     return (
         <group>
-            <Center scale={[1, 1, 1]} position={[0, 1.5, 0]}>
+            <Center scale={[1, 1, 1]} position={[0, 0.8, 0]}>
                 <Text3D
                     font="https://threejs.org/examples/fonts/helvetiker_regular.typeface.json"
                     size={0.75}
@@ -97,7 +97,9 @@ function TextComponent({ config }: TextProps) {
                     bevelSize={0.02}
                     bevelSegments={10}
                 >
-                    at.future
+                    {/* at.future */}
+                    SSA
+                    {/* <div className="">ss</div> */}
                     <MeshTransmissionMaterial {...config} />
                 </Text3D>
             </Center>

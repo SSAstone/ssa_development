@@ -70,11 +70,11 @@ const menu: MenuProps[] = [
         icon: LayoutDashboard,
         href: "/admin",
     },
-    {
-        label: "Projects",
-        icon: Bot,
-        href: "/admin/projects",
-    },
+    // {
+    //     label: "Projects",
+    //     icon: Bot,
+    //     href: "/admin/projects",
+    // },
     {
         label: "Products",
         icon: Bot,
@@ -85,26 +85,26 @@ const menu: MenuProps[] = [
         icon: TextAlignCenter,
         href: "/admin/services",
     },
-    {
-        label: "Notices",
-        icon: Bell,
-        href: "/dashboard/admin/notices",
-    },
-    {
-        label: "Activities",
-        icon: Activity,
-        href: "/dashboard/admin/activities",
-    },
-    {
-        label: "Gallery",
-        icon: Image,
-        href: "/dashboard/admin/gallery",
-    },
-    {
-        label: "Site Settings",
-        icon: Settings,
-        href: "/dashboard/admin/site-settings",
-    },
+    // {
+    //     label: "Notices",
+    //     icon: Bell,
+    //     href: "/dashboard/admin/notices",
+    // },
+    // {
+    //     label: "Activities",
+    //     icon: Activity,
+    //     href: "/dashboard/admin/activities",
+    // },
+    // {
+    //     label: "Gallery",
+    //     icon: Image,
+    //     href: "/dashboard/admin/gallery",
+    // },
+    // {
+    //     label: "Site Settings",
+    //     icon: Settings,
+    //     href: "/dashboard/admin/site-settings",
+    // },
 ]
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
