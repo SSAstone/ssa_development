@@ -13,6 +13,8 @@ import { Plus, Trash2, ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Editor } from "@/components/ui/editor";
+import { uploadImageToCloudinary } from "@/actions/upload-image";
+import Image from "next/image";
 
 interface ProductFormProps {
     initialData?: ProductFormValues;
@@ -22,6 +24,9 @@ interface ProductFormProps {
 export default function ProductForm({ initialData, productId }: ProductFormProps) {
     const [isPending, startTransition] = useTransition();
     const [status, setStatus] = React.useState<{ error?: string; success?: string }>({});
+    const [imagePreview, setImagePreview] = React.useState<string | null>(
+        typeof initialData?.image === 'string' ? initialData.image : null
+    );
     const router = useRouter();
 
     const {
@@ -30,6 +35,7 @@ export default function ProductForm({ initialData, productId }: ProductFormProps
         handleSubmit,
         formState: { errors },
         reset,
+        setValue,
     } = useForm<ProductFormValues>({
         resolver: zodResolver(productFormSchema),
         defaultValues: initialData || {
@@ -48,10 +54,28 @@ export default function ProductForm({ initialData, productId }: ProductFormProps
         setStatus({});
         startTransition(async () => {
             let result;
+
+            let imageUrl = values.image;
+
+            if (values.image instanceof File) {
+                const uploadResult = await uploadImageToCloudinary(values.image);
+                if (uploadResult.success && uploadResult.url) {
+                    imageUrl = uploadResult.url;
+                } else {
+                    setStatus({ error: uploadResult.error || "Failed to upload image" });
+                    return;
+                }
+            }
+
+            const finalValues = {
+                ...values,
+                image: imageUrl as string
+            };
+
             if (productId) {
-                result = await updateProductAction(productId, values);
+                result = await updateProductAction(productId, finalValues);
             } else {
-                result = await createProductAction(values);
+                result = await createProductAction(finalValues);
             }
 
             if ("error" in result && result.error) {
@@ -92,6 +116,89 @@ export default function ProductForm({ initialData, productId }: ProductFormProps
                         className={errors.title ? "border-red-500" : ""}
                     />
                     {errors.title && <p className="text-red-500 text-sm">{errors.title.message}</p>}
+                </div>
+
+                <div className="space-y-2">
+                    <Label htmlFor="name">Product Name</Label>
+                    <Input
+                        id="name"
+                        {...register("name")}
+                        placeholder="e.g. Enterprise Solution"
+                        className={errors.name ? "border-red-500" : ""}
+                    />
+                    {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
+                </div>
+
+                <div className="space-y-2">
+                    <Label htmlFor="image">Product Image</Label>
+                    <div className="flex flex-col gap-4">
+                        {imagePreview ? (
+                            <div className="relative w-40 h-40 border rounded-md overflow-hidden group">
+                                <Image
+                                    src={imagePreview}
+                                    alt="Preview"
+                                    fill
+                                    className="object-cover"
+                                />
+                                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                                    <Button
+                                        type="button"
+                                        variant="secondary"
+                                        size="sm"
+                                        onClick={() => document.getElementById('image-upload')?.click()}
+                                    >
+                                        Change
+                                    </Button>
+                                    <Button
+                                        type="button"
+                                        variant="destructive"
+                                        size="icon"
+                                        className="h-8 w-8"
+                                        onClick={() => {
+                                            setImagePreview(null);
+                                            setValue("image", "");
+                                        }}
+                                    >
+                                        <Trash2 className="h-4 w-4" />
+                                    </Button>
+                                </div>
+                            </div>
+                        ) : (
+                            <Button
+                                type="button"
+                                variant="outline"
+                                className="w-40 h-40 border-dashed border-2 flex flex-col gap-2 items-center justify-center hover:bg-slate-50"
+                                onClick={() => document.getElementById('image-upload')?.click()}
+                            >
+                                <Plus className="h-8 w-8 text-slate-400" />
+                                <span className="text-sm text-slate-500">Add Image</span>
+                            </Button>
+                        )}
+                        <Controller
+                            name="image"
+                            control={control}
+                            render={({ field: { onChange } }) => (
+                                <input
+                                    type="file"
+                                    className="hidden"
+                                    id="image-upload"
+                                    accept="image/*"
+                                    onChange={(e) => {
+                                        const file = e.target.files?.[0];
+                                        if (file) {
+                                            onChange(file);
+                                            const reader = new FileReader();
+                                            reader.onloadend = () => {
+                                                setImagePreview(reader.result as string);
+                                            };
+                                            reader.readAsDataURL(file);
+                                        }
+                                    }}
+                                />
+                            )}
+                        />
+                    </div>
+                    {errors.image && <p className="text-red-500 text-sm">{errors.image.message as string}</p>}
                 </div>
 
                 <div className="space-y-2">

@@ -29,6 +29,8 @@
     "@tiptap/pm": "^3.19.0",
     "@tiptap/react": "^3.19.0",
     "@tiptap/starter-kit": "^3.19.0",
+    "cloudinary": "^2.8.0",
+    "next-cloudinary": "^6.17.5",
     "@types/three": "^0.182.0",
     "bcryptjs": "^3.0.3",
     "class-variance-authority": "^0.7.1",

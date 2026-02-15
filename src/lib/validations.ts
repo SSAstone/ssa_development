@@ -18,6 +18,8 @@ export const productItemSchema = z.object({
 
 export const productFormSchema = z.object({
     title: z.string().min(1, "Title is required"),
+    name: z.string().min(1, "Name is required"),
+    image: z.any().refine((val) => val !== null && val !== undefined, "Image is required"),
     description: z.string().min(1, "Description is required"),
     productItems: z.array(productItemSchema),
 });

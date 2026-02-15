@@ -1,6 +1,7 @@
 import React from 'react'
 import { getProductById } from "@/actions/product"
 import { notFound } from "next/navigation"
+import { ProductFormValues } from "@/lib/validations"
 import ProductForm from "@/components/admin/ProductForm"
 
 export default async function EditProductPage({ params }: { params: Promise<{ id: string }> }) {
@@ -12,13 +13,15 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
     }
 
     // Map database structure to form structure if necessary
-    const initialData = {
-        title: productData.title,
+    const initialData: ProductFormValues = {
+        title: productData.title ?? "",
+        name: productData.name,
+        image: productData.image ?? "",
         description: productData.description,
         productItems: productData.productItems.map(item => ({
             label: item.label,
-            content: item.content as any, // Cast to any to bypass strict type check for JSONB
-            items: item.items as any
+            content: (item.content as any) ?? [],
+            items: (item.items as any) ?? []
         }))
     }
 

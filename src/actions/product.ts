@@ -14,10 +14,12 @@ export async function createProductAction(values: ProductFormValues) {
             return { error: "Invalid fields!" };
         }
 
-        const { title, description, productItems } = validatedFields.data;
+        const { title, name, image, description, productItems } = validatedFields.data;
 
         const [newProduct] = await db.insert(product).values({
             title,
+            name,
+            image,
             description,
         }).returning();
 
@@ -73,12 +75,12 @@ export async function updateProductAction(id: number, values: ProductFormValues)
             return { error: "Invalid fields!" };
         }
 
-        const { title, description, productItems } = validatedFields.data;
+        const { title, name, image, description, productItems } = validatedFields.data;
 
         await db.transaction(async (tx) => {
             // 1. Update product main info
             await tx.update(product)
-                .set({ title, description, updatedAt: new Date() })
+                .set({ title, name, image, description, updatedAt: new Date() })
                 .where(eq(product.id, id));
 
             // 2. Delete existing items

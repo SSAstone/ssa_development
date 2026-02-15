@@ -14,7 +14,9 @@ export const users = pgTable("users", {
 
 export const product = pgTable("product", {
     id: serial("id").primaryKey(),
-    title: varchar("title", { length: 255 }).notNull(),
+    title: varchar("title", { length: 255 }),
+    name: varchar("name", { length: 255 }).notNull(),
+    image: text("image"),
     description: text("description").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
