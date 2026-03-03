@@ -1,5 +1,7 @@
+import { getProducts } from "@/actions/product";
 import { Button } from "@/components/ui/button";
 import { ArrowUpRight } from "lucide-react";
+import Image from "next/image";
 
 // Placeholder data for portfolio items
 const projects = [
@@ -29,7 +31,8 @@ const projects = [
     },
 ];
 
-export function Portfolio() {
+export async function Portfolio() {
+    const products = await getProducts()
     return (
         <section id="products" className="py-24 bg-background border-t border-border/50">
             <div className="container mx-auto px-4">
@@ -42,16 +45,22 @@ export function Portfolio() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    {projects.map((project, index) => (
+                    {products.map((project, index) => (
                         <div key={index} className="group relative overflow-hidden rounded-2xl border border-border bg-background aspect-[4/3] md:aspect-[16/9] transition-all hover:shadow-xl">
                             {/* Image Placeholder */}
-                            <div className={`absolute inset-0 ${project.image} transition-transform duration-500 group-hover:scale-105`} />
+                            <div className={`absolute inset-0 transition-transform duration-500 group-hover:scale-105`} >
+                                <div className="relative">
+                                    <div className="bg-background group-hover:bg-white absolute  opacity-25 w-full h-full"></div>
+                                    <Image src={project.image || ''} width={1000} height={1000} alt='image' />
+                                </div>
+
+                            </div>
 
                             {/* Overlay Content */}
                             <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent p-8 flex flex-col justify-end">
                                 <div className="transform translate-y-4 transition-transform duration-300 group-hover:translate-y-0">
                                     <span className="text-primary text-sm font-semibold mb-2 block opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                                        {project.category}
+                                        {project.title}
                                     </span>
                                     <h3 className="text-2xl font-bold mb-2 text-foreground">{project.title}</h3>
                                     <p className="text-muted-foreground mb-4 line-clamp-2 opacity-80 group-hover:opacity-100 transition-opacity">
@@ -66,11 +75,11 @@ export function Portfolio() {
                     ))}
                 </div>
 
-                <div className="mt-12 text-center">
+                {/* <div className="mt-12 text-center">
                     <Button variant="outline" size="lg">
                         View All Projects
                     </Button>
-                </div>
+                </div> */}
             </div>
         </section>
     );

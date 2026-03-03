@@ -13,10 +13,12 @@ import {
 } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { Badge } from '@/components/ui/badge'
+import Image from 'next/image'
 
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params
     const product = await getProductById(parseInt(id))
+    console.log("product--------", product)
 
     if (!product) {
         notFound()

@@ -1,3 +1,5 @@
+"use client"
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Code, Globe, Smartphone, BrainCircuit, ShieldCheck, Cloud } from "lucide-react";
 
@@ -35,6 +37,15 @@ const services = [
 ];
 
 export function Services() {
+    const [activeServiceIndex, setActiveServiceIndex] = useState(0);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setActiveServiceIndex((prev) => (prev + 1) % services.length);
+        }, 3000);
+        return () => clearInterval(interval);
+    }, []);
+
     return (
         <div className={"dark contents"}>
             <section id="services" className="py-20 bg-background">
@@ -48,19 +59,29 @@ export function Services() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {services.map((service, index) => (
-                            <Card key={index} className="bg-card/50 backdrop-blur-sm border-border hover:border-primary/50 transition-all duration-300 hover:shadow-lg group">
-                                <CardHeader>
-                                    <div className="size-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
-                                        <service.icon className="size-6 text-primary" />
-                                    </div>
-                                    <CardTitle className="text-xl">{service.title}</CardTitle>
-                                </CardHeader>
-                                <CardContent>
-                                    <CardDescription className="text-base text-muted-foreground/80">
-                                        {service.description}
-                                    </CardDescription>
-                                </CardContent>
-                            </Card>
+                            <div key={index} className="relative p-px overflow-hidden rounded-xl group/card h-full">
+                                {/* Static Border (Previous Border) */}
+                                <div className={`absolute inset-0 border border-border rounded-xl transition-opacity duration-1000 ${activeServiceIndex === index ? 'opacity-0' : 'opacity-100'}`} />
+
+                                {/* Moving Light Border */}
+                                <div
+                                    className={`absolute inset-[-1000%] animate-spin-slow bg-[conic-gradient(from_90deg_at_50%_50%,transparent_0%,transparent_45%,var(--primary)_50%,transparent_55%,transparent_100%)] transition-opacity duration-1000 ${activeServiceIndex === index ? 'opacity-100' : 'opacity-0 group-hover/card:opacity-100'}`}
+                                />
+
+                                <Card className="relative h-full bg-card/95 backdrop-blur-md border-none flex flex-col group transition-all duration-300">
+                                    <CardHeader>
+                                        <div className="size-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
+                                            <service.icon className="size-6 text-primary" />
+                                        </div>
+                                        <CardTitle className="text-xl">{service.title}</CardTitle>
+                                    </CardHeader>
+                                    <CardContent className="grow">
+                                        <CardDescription className="text-base text-muted-foreground/80">
+                                            {service.description}
+                                        </CardDescription>
+                                    </CardContent>
+                                </Card>
+                            </div>
                         ))}
                     </div>
                 </div>

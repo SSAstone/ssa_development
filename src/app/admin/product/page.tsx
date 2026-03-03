@@ -10,6 +10,7 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
+import Image from 'next/image'
 
 export default async function Page() {
     const products = await getProducts()
@@ -40,6 +41,7 @@ export default async function Page() {
                     products.map((p) => (
                         <Card key={p.id} className="overflow-hidden hover:shadow-md transition-shadow">
                             <CardHeader className="bg-muted/30 pb-4">
+                                <Image src={p.image || ''} width={1000} height={1000} alt='image' />
                                 <CardTitle>{p.title}</CardTitle>
                                 <CardDescription className="line-clamp-2">
                                     <div

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { GrSwift } from "react-icons/gr";
 import { BiLogoPostgresql } from "react-icons/bi";
@@ -95,7 +95,24 @@ export const services = [
 
 export default function NewServices() {
     const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
+    const [activeServiceIndex, setActiveServiceIndex] = useState(0)
+    const [activeLogoIndex, setActiveLogoIndex] = useState(0)
     const [sideIndices, setSideIndices] = useState<number[]>([])
+
+    useEffect(() => {
+        const serviceInterval = setInterval(() => {
+            setActiveServiceIndex((prev) => (prev + 1) % services.length)
+        }, 3000)
+
+        const logoInterval = setInterval(() => {
+            setActiveLogoIndex((prev) => (prev + 1) % logos.length)
+        }, 2000)
+
+        return () => {
+            clearInterval(serviceInterval)
+            clearInterval(logoInterval)
+        }
+    }, [])
 
     const getSideIndices = (index: number) => {
         const sideIndices = []
@@ -123,19 +140,29 @@ export default function NewServices() {
                                     <div className="space-y-4">
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                             {services.map((service, index) => (
-                                                <Card key={index} className="bg-card/50 backdrop-blur-sm border-border hover:border-primary/50 transition-all duration-300 hover:shadow-lg group">
-                                                    <CardHeader>
-                                                        <div className="size-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
-                                                            <service.icon className="size-6 text-primary" />
-                                                        </div>
-                                                        <CardTitle className="text-xl">{service.title}</CardTitle>
-                                                    </CardHeader>
-                                                    <CardContent>
-                                                        <CardDescription className="text-base text-muted-foreground/80">
-                                                            {service.description}
-                                                        </CardDescription>
-                                                    </CardContent>
-                                                </Card>
+                                                <div key={index} className="relative p-px overflow-hidden rounded-xl group/card h-full">
+                                                    {/* Static Border (Previous Border) */}
+                                                    <div className={`absolute inset-0 border border-border rounded-xl transition-opacity duration-1000 ${activeServiceIndex === index ? 'opacity-0' : 'opacity-100'}`} />
+
+                                                    {/* Moving Light Border */}
+                                                    <div
+                                                        className={`absolute inset-[-1000%] animate-spin-slow bg-[conic-gradient(from_90deg_at_50%_50%,transparent_0%,transparent_45%,var(--primary)_50%,transparent_55%,transparent_100%)] transition-opacity duration-1000 ${activeServiceIndex === index ? 'opacity-100' : 'opacity-0 group-hover/card:opacity-100'}`}
+                                                    />
+
+                                                    <Card className="relative h-full bg-card/95 backdrop-blur-md border-none flex flex-col group transition-all duration-300">
+                                                        <CardHeader>
+                                                            <div className="size-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
+                                                                <service.icon className="size-6 text-primary" />
+                                                            </div>
+                                                            <CardTitle className="text-xl">{service.title}</CardTitle>
+                                                        </CardHeader>
+                                                        <CardContent className="grow">
+                                                            <CardDescription className="text-base text-muted-foreground/80">
+                                                                {service.description}
+                                                            </CardDescription>
+                                                        </CardContent>
+                                                    </Card>
+                                                </div>
                                             ))}
                                         </div>
                                     </div>
@@ -150,10 +177,11 @@ export default function NewServices() {
                             <div className="grid grid-cols-4 gap-1 rotate-3">
                                 {logos.map((logo, index) => {
                                     const Icon = logo.icon
+                                    const isActive = activeLogoIndex === index;
                                     return (
                                         <div
                                             key={index}
-                                            className={`relative flex items-center bg-gray-900 justify-center h-32 text-5xl transition-all duration-500 ease-in-out cursor-pointer ${hoveredIndex === index ? 'z-20 border border-gray-700' : sideIndices.includes(index) ? 'z-10' : 'z-0'}`}
+                                            className={`relative flex items-center bg-gray-900 justify-center h-32 text-5xl transition-all duration-500 ease-in-out cursor-pointer overflow-hidden p-px rounded-sm ${hoveredIndex === index ? 'z-20' : sideIndices.includes(index) ? 'z-10' : 'z-0'}`}
                                             style={{
                                                 transform: hoveredIndex === index
                                                     ? 'scale(1.1) translate(-20px, -20px)'
@@ -175,9 +203,19 @@ export default function NewServices() {
                                                 setSideIndices([])
                                             }}
                                         >
-                                            <Icon className="w-8 h-8 text-white" />
-                                            <div className={`absolute inset-0 bg-gray-700 opacity-0 transition-opacity duration-300 flex items-center justify-center ${hoveredIndex === index ? 'opacity-100' : ''}`}>
-                                                <span className="text-lg font-semibold">{logo.name}</span>
+                                            {/* Static Border (Hidden when active) */}
+                                            <div className={`absolute inset-0 border-gray-800 rounded-sm transition-opacity duration-1000 ${isActive ? 'opacity-0' : 'opacity-100'}`} />
+
+                                            {/* Moving Light Border */}
+                                            <div
+                                                className={`absolute inset-[-1000%] animate-spin-slow bg-[conic-gradient(from_90deg_at_50%_50%,transparent_0%,transparent_45%,var(--primary)_50%,transparent_55%,transparent_100%)] transition-opacity duration-1000 ${isActive ? 'opacity-100' : 'opacity-0'}`}
+                                            />
+
+                                            <div className="relative z-10 w-full h-full flex items-center justify-center bg-gray-900">
+                                                <Icon className="w-8 h-8 text-white" />
+                                                <div className={`absolute inset-0 bg-gray-700 opacity-0 transition-opacity duration-300 flex items-center justify-center ${hoveredIndex === index ? 'opacity-100' : ''}`}>
+                                                    <span className="text-lg font-semibold">{logo.name}</span>
+                                                </div>
                                             </div>
                                         </div>
                                     )
