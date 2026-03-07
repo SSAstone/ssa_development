@@ -24,7 +24,7 @@ export function Contact() {
                                     </div>
                                     <div>
                                         <h3 className="font-semibold">Email Us</h3>
-                                        <p className="text-muted-foreground">hello@innotech.com</p>
+                                        <p className="text-muted-foreground">skshiam129@gmail.com</p>
                                     </div>
                                 </div>
 
@@ -34,7 +34,7 @@ export function Contact() {
                                     </div>
                                     <div>
                                         <h3 className="font-semibold">Call Us</h3>
-                                        <p className="text-muted-foreground">+1 (555) 123-4567</p>
+                                        <p className="text-muted-foreground">+880 1568235129</p>
                                     </div>
                                 </div>
 
@@ -44,7 +44,7 @@ export function Contact() {
                                     </div>
                                     <div>
                                         <h3 className="font-semibold">Visit Us</h3>
-                                        <p className="text-muted-foreground">123 Tech Avenue, Silicon Valley, CA</p>
+                                        <p className="text-muted-foreground">Rupsha Khulna, Bangladesh</p>
                                     </div>
                                 </div>
                             </div>

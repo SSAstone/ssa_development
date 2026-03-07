@@ -23,9 +23,8 @@ export function Footer() {
                     </div>
 
                     <div className="flex gap-6">
-                        <Link href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">Twitter</Link>
-                        <Link href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">LinkedIn</Link>
-                        <Link href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">GitHub</Link>
+                        <Link href="https://www.linkedin.com/in/sk-shiam-ali-6a4b17284/" className="text-sm text-muted-foreground hover:text-primary transition-colors">LinkedIn</Link>
+                        <Link href="https://github.com/SSAstone" className="text-sm text-muted-foreground hover:text-primary transition-colors">GitHub</Link>
                     </div>
 
                     <div className="text-sm text-muted-foreground">
