@@ -27,7 +27,7 @@ function CanvasFunction() {
         <div className="h-screen w-full text-center">
             <div className="z-50 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                 <div className="text-mainColor md:block notranslate mt-24">
-                    <p className='flex gap-1 '>Transforming Ideas into <span className="text-primary">
+                    <p className='flex gap-1 text-sm tracking-[0.5em]'>Transforming Ideas into <span className="text-primary">
                         {/* <Typewriter
                             options={{
                                 strings: [

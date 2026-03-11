@@ -29,7 +29,9 @@ import {
     Image,
     Calendar,
     LayoutDashboard,
+    Mail,
 } from "lucide-react"
+
 import { usePathname } from "next/navigation"
 
 const data = {
@@ -85,7 +87,13 @@ const menu: MenuProps[] = [
         icon: TextAlignCenter,
         href: "/admin/services",
     },
+    {
+        label: "Contacts",
+        icon: Mail,
+        href: "/admin/contacts",
+    },
     // {
+
     //     label: "Notices",
     //     icon: Bell,
     //     href: "/dashboard/admin/notices",
