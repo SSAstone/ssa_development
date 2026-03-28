@@ -126,9 +126,9 @@ export default function NewServices() {
     return (
         <div className={"dark contents"}>
             <section id="services" className="py-24 bg-background">
-                <div className="flex items-center justify-center text-white relative">
-                    <div className="w-3/6">
-                        <div className="absolute inset-0">
+                <div className="md:flex items-center justify-center text-white relative p-4 md:p-0">
+                    <div className="md:w-3/6">
+                        <div className="md:absolute inset-0">
                             <div className="container mx-auto flex justify-center">
                                 <div className="">
                                     <div className="pb-10">
@@ -168,12 +168,12 @@ export default function NewServices() {
                                     </div>
 
                                 </div>
-                                <div className="w-3/6 h-full flex-shrink-0"></div>
+                                <div className="md:w-3/6 h-full flex-shrink-0"></div>
                             </div>
                         </div>
                     </div>
-                    <div className="w-3/6 overflow-hidden h-full">
-                        <div className="w-full ml-auto pt-20 pb-12 pl-16">
+                    <div className="md:w-3/6 overflow-hidden h-full">
+                        <div className="w-full ml-auto pt-20 pb-12 md:pl-16">
                             <div className="grid grid-cols-4 gap-1 rotate-3">
                                 {logos.map((logo, index) => {
                                     const Icon = logo.icon

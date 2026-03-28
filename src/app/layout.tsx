@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   title: "SK SHIAM ALI",
   description: "Premium IT Solutions and Services",
   icons: {
-    icon: "/icon.jpeg",
+    icon: "/icon.png",
   },
 };
 
