@@ -7,8 +7,11 @@ import { Footer } from "@/components/layout/Footer";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "SSA - Shaping the Future",
+  title: "SK SHIAM ALI",
   description: "Premium IT Solutions and Services",
+  icons: {
+    icon: "/icon.jpeg",
+  },
 };
 
 export default function RootLayout({
