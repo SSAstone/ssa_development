@@ -18,6 +18,7 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
         name: productData.name,
         image: productData.image ?? "",
         description: productData.description,
+        url: productData.url ?? "",
         productItems: productData.productItems.map(item => ({
             label: item.label,
             content: (item.content as any) ?? [],

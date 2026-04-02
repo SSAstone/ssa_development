@@ -17,6 +17,7 @@ export const product = pgTable("product", {
     title: varchar("title", { length: 255 }),
     name: varchar("name", { length: 255 }).notNull(),
     image: text("image"),
+    url: text("url"),
     description: text("description").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
@@ -68,4 +69,4 @@ export const contact = pgTable("contact", {
     message: text("message").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
-});
+});

@@ -2,6 +2,7 @@ import { getProducts } from "@/actions/product";
 import { Button } from "@/components/ui/button";
 import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 // Placeholder data for portfolio items
 const projects = [
@@ -51,7 +52,7 @@ export async function Portfolio() {
                             <div className={`absolute inset-0 transition-transform duration-500 group-hover:scale-105`} >
                                 <div className="relative">
                                     <div className="bg-background group-hover:bg-white absolute  opacity-25 w-full h-full"></div>
-                                    <Image src={project.image || ''} width={1000} height={1000} alt='image' />
+                                    <Image src={project.image || ''} width={1000} height={1000} alt='image' className="w-full h-full aspect-[4/3] md:aspect-[16/9] object-cover rounded-2xl" />
                                 </div>
 
                             </div>
@@ -64,11 +65,12 @@ export async function Portfolio() {
                                     </span>
                                     <h3 className="text-2xl font-bold mb-2 text-foreground">{project.title}</h3>
                                     <p className="text-muted-foreground mb-4 line-clamp-2 opacity-80 group-hover:opacity-100 transition-opacity">
-                                        {project.description}
+                                        {/* {project.description} */}
+                                        <div dangerouslySetInnerHTML={{ __html: project.description }} />
                                     </p>
-                                    <Button variant="link" className="!p-0 h-auto text-primary gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100">
+                                    <Link href={project.url || '#'} target="_blank" className="!p-0 flex items-center h-auto text-primary gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100">
                                         View Case Study <ArrowUpRight className="size-4" />
-                                    </Button>
+                                    </Link>
                                 </div>
                             </div>
                         </div>
