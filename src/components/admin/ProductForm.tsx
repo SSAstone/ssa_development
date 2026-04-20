@@ -55,42 +55,80 @@ export default function ProductForm({ initialData, productId }: ProductFormProps
         startTransition(async () => {
             let result;
 
-            let imageUrl = values.image;
+            try {
+                let imageUrl = values.image;
 
-            if (values.image instanceof File) {
-                const uploadResult = await uploadImageToCloudinary(values.image);
-                if (uploadResult.success && uploadResult.url) {
-                    imageUrl = uploadResult.url;
+                if (values.image instanceof File) {
+                    const uploadResult = await uploadImageToCloudinary(values.image);
+                    if (uploadResult.success && uploadResult.url) {
+                        imageUrl = uploadResult.url;
+                    } else {
+                        setStatus({ error: uploadResult.error || "Failed to upload image" });
+                        return;
+                    }
+                }
+
+                const processFileUploadsInItems = async (items: ProductFormValues['productItems']) => {
+                    return Promise.all(items.map(async (item) => {
+                        const processedContent = await Promise.all(item.content.map(async (contentItem) => {
+                            if (contentItem.image instanceof File) {
+                                const res = await uploadImageToCloudinary(contentItem.image);
+                                if (!res.success || !res.url) {
+                                    throw new Error(res.error || "Failed to upload content image");
+                                }
+                                return { ...contentItem, image: res.url };
+                            }
+                            return contentItem;
+                        }));
+
+                        const processedSubItems = await Promise.all(item.items.map(async (subItem) => {
+                            const processedSubContent = await Promise.all(subItem.content.map(async (subContent) => {
+                                if (subContent.image instanceof File) {
+                                    const res = await uploadImageToCloudinary(subContent.image);
+                                    if (!res.success || !res.url) {
+                                        throw new Error(res.error || "Failed to upload sub-item image");
+                                    }
+                                    return { ...subContent, image: res.url };
+                                }
+                                return subContent;
+                            }));
+                            return { ...subItem, content: processedSubContent };
+                        }));
+
+                        return { ...item, content: processedContent, items: processedSubItems };
+                    }));
+                };
+
+                const processedItems = await processFileUploadsInItems(values.productItems);
+
+                const finalValues = {
+                    ...values,
+                    image: imageUrl as string,
+                    productItems: processedItems
+                };
+
+                if (productId) {
+                    result = await updateProductAction(productId, finalValues);
                 } else {
-                    setStatus({ error: uploadResult.error || "Failed to upload image" });
-                    return;
-                }
-            }
-
-            const finalValues = {
-                ...values,
-                image: imageUrl as string
-            };
-
-            if (productId) {
-                result = await updateProductAction(productId, finalValues);
-            } else {
-                result = await createProductAction(finalValues);
-            }
-
-            if ("error" in result && result.error) {
-                setStatus({ error: result.error });
-            } else if ("success" in result && result.success) {
-                setStatus({ success: result.success });
-                const finalId = productId || (result as any).id;
-
-                if (!productId) {
-                    reset();
+                    result = await createProductAction(finalValues);
                 }
 
-                setTimeout(() => {
-                    router.push(`/admin/product/${finalId}`);
-                }, 1500);
+                if ("error" in result && result.error) {
+                    setStatus({ error: result.error });
+                } else if ("success" in result && result.success) {
+                    setStatus({ success: result.success });
+                    const finalId = productId || (result as any).id;
+
+                    if (!productId) {
+                        reset();
+                    }
+
+                    setTimeout(() => {
+                        router.push(`/admin/product/${finalId}`);
+                    }, 1500);
+                }
+            } catch (err: any) {
+                setStatus({ error: err.message || "An error occurred during submission" });
             }
         });
     };
@@ -348,6 +386,15 @@ function ProductItemSection({ index, control, register, remove, errors }: any) {
                                         />
                                     )}
                                 />
+                                <div className="mt-1">
+                                    <Controller
+                                        name={`productItems.${index}.content.${cIndex}.image`}
+                                        control={control}
+                                        render={({ field }) => (
+                                            <ImageUploadField value={field.value} onChange={field.onChange} />
+                                        )}
+                                    />
+                                </div>
                             </div>
                             <Button
                                 type="button"
@@ -447,12 +494,65 @@ function NestedContentSection({ itemIndex, parentIndex, control, register }: any
                                 />
                             )}
                         />
+                        <div className="mt-1">
+                            <Controller
+                                name={`productItems.${parentIndex}.items.${itemIndex}.content.${index}.image`}
+                                control={control}
+                                render={({ field }) => (
+                                    <ImageUploadField value={field.value} onChange={field.onChange} />
+                                )}
+                            />
+                        </div>
                     </div>
                     <Button type="button" variant="ghost" size="sm" onClick={() => remove(index)}>
                         <Trash2 className="w-3 h-3" />
                     </Button>
                 </div>
             ))}
+        </div>
+    );
+}
+
+function ImageUploadField({ value, onChange }: { value: any, onChange: (val: any) => void }) {
+    const previewUrl = React.useMemo(() => {
+        if (typeof value === 'string' && value) return value;
+        if (value instanceof File) return URL.createObjectURL(value);
+        return null;
+    }, [value]);
+
+    return (
+        <div className="flex items-center gap-4">
+            {previewUrl ? (
+                <div className="relative w-16 h-16 border rounded-md overflow-hidden group">
+                    <Image src={previewUrl} alt="Preview" fill className="object-cover" />
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <Button
+                            type="button"
+                            variant="destructive"
+                            size="icon"
+                            className="h-6 w-6"
+                            onClick={() => onChange("")}
+                        >
+                            <Trash2 className="h-3 w-3" />
+                        </Button>
+                    </div>
+                </div>
+            ) : (
+                <div className="relative w-16 h-16 border-dashed border-2 rounded-md hover:bg-slate-50 flex items-center justify-center bg-slate-50 text-slate-500 hover:text-slate-700">
+                    <Plus className="h-6 w-6" />
+                    <input
+                        type="file"
+                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                        accept="image/*"
+                        onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                                onChange(file);
+                            }
+                        }}
+                    />
+                </div>
+            )}
         </div>
     );
 }

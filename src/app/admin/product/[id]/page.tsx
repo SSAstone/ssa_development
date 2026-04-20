@@ -54,6 +54,16 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-4">
+                            {product.image && (
+                                <div className="relative w-full h-48 rounded-md overflow-hidden bg-slate-100 mb-4">
+                                    <Image
+                                        src={product.image}
+                                        alt={product.title || "Product"}
+                                        fill
+                                        className="object-cover"
+                                    />
+                                </div>
+                            )}
                             <div>
                                 <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-2">Description</h4>
                                 <div
@@ -105,7 +115,17 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
                                             <div className="grid gap-4">
                                                 {item.content.map((c: any, i: number) => (
                                                     <div key={i} className="p-4 rounded-lg bg-muted/50 border border-muted">
-                                                        <h5 className="font-semibold text-sm mb-2">{c.title}</h5>
+                                                        <h5 className="font-semibold text-sm mb-3">{c.title}</h5>
+                                                        {c.image && (
+                                                            <div className="relative w-full max-w-sm h-40 mb-4 rounded-md overflow-hidden bg-slate-100 border border-slate-200">
+                                                                <Image 
+                                                                    src={c.image} 
+                                                                    alt={c.title || "Content block image"} 
+                                                                    fill 
+                                                                    className="object-contain"
+                                                                />
+                                                            </div>
+                                                        )}
                                                         <div
                                                             className="prose prose-sm dark:prose-invert max-w-none text-muted-foreground"
                                                             dangerouslySetInnerHTML={{ __html: c.body }}
@@ -129,8 +149,18 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
                                                         </h5>
                                                         <div className="grid gap-4 pl-4">
                                                             {subItem.content.map((sc: any, si: number) => (
-                                                                <div key={si} className="space-y-1">
+                                                                <div key={si} className="space-y-2">
                                                                     <div className="font-semibold text-xs text-muted-foreground">{sc.title}</div>
+                                                                    {sc.image && (
+                                                                        <div className="relative w-full max-w-xs h-32 my-2 rounded-md overflow-hidden bg-slate-100 border border-slate-200">
+                                                                            <Image 
+                                                                                src={sc.image} 
+                                                                                alt={sc.title || "Sub-content image"} 
+                                                                                fill 
+                                                                                className="object-contain"
+                                                                            />
+                                                                        </div>
+                                                                    )}
                                                                     <div
                                                                         className="prose prose-sm dark:prose-invert max-w-none text-sm text-foreground"
                                                                         dangerouslySetInnerHTML={{ __html: sc.body }}

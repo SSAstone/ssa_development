@@ -3,6 +3,7 @@ import { z } from "zod";
 export const productItemContentSchema = z.object({
     title: z.string().min(1, "Title is required"),
     body: z.string().min(1, "Body is required"),
+    image: z.any().optional(),
 });
 
 export const productItemNestedSchema = z.object({

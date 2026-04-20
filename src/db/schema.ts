@@ -33,12 +33,14 @@ export const productItem = pgTable("product_item", {
     label: varchar("label", { length: 255 }).notNull(),
     content: jsonb("content").$type<{
         title: string;
+        image?: string;
         body: string;
     }[]>().default([]),
     items: jsonb("items").$type<{
         label: string;
         content: {
             title: string;
+            image?: string;
             body: string;
         }[];
     }[]>().default([]),
