@@ -21,6 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <link rel="icon" href="/ssa-g.svg" />
       <body className={`${inter.className} min-h-screen flex flex-col scroll-smooth`}>
         {/* <Navbar /> */}
         <main className="flex-1">{children}</main>

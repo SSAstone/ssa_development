@@ -16,7 +16,7 @@ export function Footer() {
                             {/* <div className="px-2 rounded-lg bg-primary/20 flex items-center justify-center">
                                 <span className="text-lg font-bold text-primary">SSA</span>
                             </div> */}
-                            <Image src="/ssa.png" alt="Logo" width={64} height={48} className="rounded-lg md:w-[64px] md:h-[48px]" />
+                            <Image src="/ssa-g.svg" alt="Logo" width={64} height={48} className="rounded-lg md:w-[64px] md:h-[48px]" />
                             <span className="text-lg font-bold tracking-tight">InnoTech</span>
                         </Link>
                         <p className="text-sm text-muted-foreground text-center md:text-left">
@@ -25,12 +25,12 @@ export function Footer() {
                     </div>
 
                     <div className="flex gap-6 items-center">
-                        <Link href="https://www.linkedin.com/in/sk-shiam-ali-6a4b17284/" className="text-sm text-muted-foreground hover:text-primary transition-colors">LinkedIn</Link>
-                        <Link href="https://github.com/SSAstone" className="text-sm text-muted-foreground hover:text-primary transition-colors">GitHub</Link>
+                        <Link target="_blank" href="https://www.linkedin.com/in/sk-shiam-ali-6a4b17284/" className="text-sm text-muted-foreground hover:text-primary transition-colors">LinkedIn</Link>
+                        <Link target="_blank" href="https://github.com/SSAstone" className="text-sm text-muted-foreground hover:text-primary transition-colors">GitHub</Link>
                     </div>
 
                     <div className="text-sm text-muted-foreground text-center md:text-right">
-                        © {new Date().getFullYear()} InnoTech Inc.<br className="md:hidden" /> All rights reserved.
+                        © {new Date().getFullYear()} SSA <br className="md:hidden" /> All rights reserved.
                     </div>
                 </div>
             </footer>
