@@ -18,6 +18,8 @@ import {
     Sun,
     Moon,
     Sparkles,
+    ZoomIn,
+    ZoomOut,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -456,11 +458,10 @@ export default function WorldMap() {
     const [tooltipPos, setTooltipPos] = useState<{ x: number; y: number } | null>(null);
     const [autoRotate, setAutoRotate] = useState<boolean>(true);
     const [themeMode, setThemeMode] = useState<"day" | "night">("day");
-    const [searchQuery, setSearchQuery] = useState<string>("");
-    const [activeContinent, setActiveContinent] = useState<string>("All");
     const [mounted, setMounted] = useState<boolean>(false);
 
     const canvasContainerRef = useRef<HTMLDivElement>(null);
+    const orbitControlsRef = useRef<any>(null);
 
     useEffect(() => {
         setMounted(true);
@@ -505,7 +506,6 @@ export default function WorldMap() {
     }, []);
 
     const handleSelectCountry = (country: CountryInfo) => {
-        // Enriched info check
         const enriched =
             allCountries.find(
                 (c) => c.name.toLowerCase() === country.name.toLowerCase() || c.id === country.id
@@ -514,10 +514,40 @@ export default function WorldMap() {
         setAutoRotate(false);
     };
 
+    const handleZoomIn = () => {
+        if (orbitControlsRef.current) {
+            const controls = orbitControlsRef.current;
+            const cam = controls.object;
+            cam.position.multiplyScalar(0.85);
+            if (cam.position.length() < 3.2) {
+                cam.position.setLength(3.2);
+            }
+            controls.update();
+        }
+    };
+
+    const handleZoomOut = () => {
+        if (orbitControlsRef.current) {
+            const controls = orbitControlsRef.current;
+            const cam = controls.object;
+            cam.position.multiplyScalar(1.18);
+            if (cam.position.length() > 9.5) {
+                cam.position.setLength(9.5);
+            }
+            controls.update();
+        }
+    };
+
     const handleResetHQ = () => {
         const hq = FEATURED_COUNTRIES.find((c) => c.isHQ) || FEATURED_COUNTRIES[0];
         setSelectedCountry(hq);
         setAutoRotate(true);
+        if (orbitControlsRef.current) {
+            const controls = orbitControlsRef.current;
+            controls.object.position.set(0, 0.7, 6.2);
+            controls.target.set(0, 0, 0);
+            controls.update();
+        }
     };
 
     const handleHoverCountry = useCallback(
@@ -539,19 +569,6 @@ export default function WorldMap() {
         []
     );
 
-    // Filtered countries based on continent and search input
-    const filteredCountries = useMemo(() => {
-        return allCountries.filter((c) => {
-            const matchesSearch =
-                c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                (c.continent && c.continent.toLowerCase().includes(searchQuery.toLowerCase()));
-            const matchesContinent =
-                activeContinent === "All" || c.continent === activeContinent;
-            return matchesSearch && matchesContinent;
-        });
-    }, [allCountries, searchQuery, activeContinent]);
-
-    const continents = ["All", "Asia", "Europe", "North America", "South America", "Africa", "Oceania"];
 
     return (
         <section
@@ -575,49 +592,15 @@ export default function WorldMap() {
                     </h2>
 
                     <p className="text-muted-foreground text-base sm:text-lg leading-relaxed">
-                        Hover over any country to see its name and details. Explore our central engineering
-                        headquarters in Bangladesh and client partnerships worldwide.
+                        Hover over any country to explore its location across the globe. Drag to rotate and explore worldwide coverage.
                     </p>
                 </div>
 
-                {/* Country Quick Access Pills (Top Featured) */}
-                <div className="flex flex-wrap items-center justify-center gap-2 mb-6">
-                    {FEATURED_COUNTRIES.slice(0, 9).map((country) => {
-                        const isActive = selectedCountry.id === country.id;
-                        return (
-                            <button
-                                key={country.id}
-                                onClick={() => handleSelectCountry(country)}
-                                className={`flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-medium transition-all duration-300 border backdrop-blur-md cursor-pointer ${
-                                    isActive
-                                        ? "bg-primary text-primary-foreground border-primary shadow-lg shadow-primary/20 scale-105"
-                                        : "bg-background/80 hover:bg-muted/80 text-muted-foreground hover:text-foreground border-border/60"
-                                }`}
-                            >
-                                <span>{country.flag}</span>
-                                <span>{country.name}</span>
-                                {country.isHQ && (
-                                    <span
-                                        className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${
-                                            isActive
-                                                ? "bg-background/30 text-white"
-                                                : "bg-amber-500/20 text-amber-400"
-                                        }`}
-                                    >
-                                        HQ
-                                    </span>
-                                )}
-                            </button>
-                        );
-                    })}
-                </div>
-
-                {/* Main 3D Canvas & Interactive Country Info Panel */}
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-                    {/* Left/Main Column: 3D Globe Canvas Container */}
+                {/* Centered 3D Globe Canvas Container */}
+                <div className="max-w-5xl mx-auto w-full">
                     <div
                         ref={canvasContainerRef}
-                        className="lg:col-span-8 relative aspect-square sm:aspect-[4/3] lg:aspect-[16/11] w-full rounded-3xl border border-white/10 bg-gradient-to-b from-card/80 to-background/90 backdrop-blur-2xl overflow-hidden shadow-2xl select-none"
+                        className="relative aspect-square sm:aspect-[16/10] md:aspect-[16/9] w-full rounded-3xl border border-white/10 bg-gradient-to-b from-card/80 to-background/90 backdrop-blur-2xl overflow-hidden shadow-2xl select-none"
                     >
                         {/* Dynamic Floating Country Tooltip on Hover */}
                         {hoveredCountry && tooltipPos && (
@@ -640,10 +623,8 @@ export default function WorldMap() {
                                             </span>
                                         )}
                                     </div>
-                                    <p className="text-[11px] text-muted-foreground flex items-center gap-1">
-                                        <span>{hoveredCountry.continent}</span>
-                                        <span>•</span>
-                                        <span className="text-primary font-medium">Click to inspect</span>
+                                    <p className="text-[11px] text-muted-foreground">
+                                        {hoveredCountry.continent}
                                     </p>
                                 </div>
                             </div>
@@ -671,6 +652,28 @@ export default function WorldMap() {
                             </div>
 
                             <div className="flex items-center gap-2 pointer-events-auto">
+                                {/* Zoom In & Out Buttons */}
+                                <div className="flex items-center gap-1 bg-background/85 backdrop-blur-md p-0.5 rounded-full border border-white/10">
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={handleZoomIn}
+                                        className="h-7 w-7 p-0 rounded-full hover:bg-muted text-foreground"
+                                        title="Zoom In (+)"
+                                    >
+                                        <ZoomIn className="size-3.5" />
+                                    </Button>
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={handleZoomOut}
+                                        className="h-7 w-7 p-0 rounded-full hover:bg-muted text-foreground"
+                                        title="Zoom Out (-)"
+                                    >
+                                        <ZoomOut className="size-3.5" />
+                                    </Button>
+                                </div>
+
                                 {/* Day / Night Map Toggle */}
                                 <Button
                                     variant="outline"
@@ -723,7 +726,7 @@ export default function WorldMap() {
                         {/* Interactive Hint Overlay */}
                         <div className="absolute bottom-4 left-4 z-20 pointer-events-none hidden sm:flex items-center gap-2 text-xs text-muted-foreground/85 bg-background/80 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/10">
                             <Compass className="size-3.5 text-primary" />
-                            <span>Hover over any country to see its name • Drag to rotate globe</span>
+                            <span>Hover over any country to see its name • Scroll or pinch to zoom • Drag to rotate</span>
                         </div>
 
                         {/* Three.js Canvas */}
@@ -763,7 +766,10 @@ export default function WorldMap() {
                                     />
 
                                     <OrbitControls
-                                        enableZoom={false}
+                                        ref={orbitControlsRef}
+                                        enableZoom={true}
+                                        minDistance={3.2}
+                                        maxDistance={9.5}
                                         enablePan={false}
                                         autoRotate={false}
                                         minPolarAngle={Math.PI / 4}
@@ -776,138 +782,6 @@ export default function WorldMap() {
                                 <div className="size-10 rounded-full border-2 border-primary border-t-transparent animate-spin" />
                             </div>
                         )}
-                    </div>
-
-                    {/* Right Column: Country Explorer & Details Panel */}
-                    <div className="lg:col-span-4 flex flex-col gap-4">
-                        {/* Selected Country Telemetry Card */}
-                        <div className="relative rounded-3xl border border-white/10 bg-card/90 backdrop-blur-xl p-6 shadow-xl overflow-hidden transition-all duration-300">
-                            <div className="absolute top-0 right-0 w-36 h-36 bg-primary/20 blur-3xl rounded-full pointer-events-none" />
-
-                            <div className="flex items-start justify-between gap-4 mb-3">
-                                <div>
-                                    <div className="flex items-center gap-2 mb-1">
-                                        <span className="text-3xl">{selectedCountry.flag}</span>
-                                        <h3 className="text-2xl font-bold tracking-tight text-foreground">
-                                            {selectedCountry.name}
-                                        </h3>
-                                    </div>
-                                    <p className="text-sm font-medium text-muted-foreground flex items-center gap-1.5">
-                                        <MapPin className="size-3.5 text-primary" />
-                                        {selectedCountry.continent} • Coordinates: {selectedCountry.centerLat.toFixed(1)}°, {selectedCountry.centerLng.toFixed(1)}°
-                                    </p>
-                                </div>
-
-                                <Badge
-                                    variant={selectedCountry.isHQ ? "default" : "secondary"}
-                                    className="rounded-full text-xs px-3 py-1 font-semibold"
-                                >
-                                    {selectedCountry.isHQ ? "★ Headquarters" : selectedCountry.continent}
-                                </Badge>
-                            </div>
-
-                            <p className="text-sm text-muted-foreground leading-relaxed mb-5">
-                                {selectedCountry.description ||
-                                    `Full-scale modern software engineering and digital transformation available for organizations in ${selectedCountry.name}.`}
-                            </p>
-
-                            {/* Metrics for Country */}
-                            <div className="grid grid-cols-2 gap-3 mb-5">
-                                <div className="p-3.5 rounded-2xl bg-muted/40 border border-white/5">
-                                    <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-1">
-                                        <Building2 className="size-3.5 text-primary" />
-                                        <span>Active Projects</span>
-                                    </div>
-                                    <p className="text-lg font-bold text-foreground">
-                                        {selectedCountry.activeProjects || 12}+
-                                    </p>
-                                </div>
-
-                                <div className="p-3.5 rounded-2xl bg-muted/40 border border-white/5">
-                                    <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-1">
-                                        <CheckCircle2 className="size-3.5 text-emerald-400" />
-                                        <span>Status</span>
-                                    </div>
-                                    <p className="text-xs font-bold text-emerald-400 mt-1 line-clamp-1">
-                                        {selectedCountry.status || "Delivery Active"}
-                                    </p>
-                                </div>
-                            </div>
-
-                            <Button asChild className="w-full h-11 rounded-xl text-sm font-medium group">
-                                <a href="#contact">
-                                    <span>Initiate Project in {selectedCountry.name}</span>
-                                    <ArrowUpRight className="ml-2 size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                                </a>
-                            </Button>
-                        </div>
-
-                        {/* Country Search & Filter Box */}
-                        <div className="rounded-3xl border border-white/10 bg-card/70 backdrop-blur-lg p-5">
-                            <div className="flex items-center justify-between gap-2 mb-3">
-                                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
-                                    <Search className="size-3.5 text-primary" /> Country Explorer
-                                </span>
-                                <span className="text-[11px] text-muted-foreground">
-                                    {allCountries.length} Countries Mapped
-                                </span>
-                            </div>
-
-                            {/* Search Input */}
-                            <div className="relative mb-3">
-                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground" />
-                                <input
-                                    type="text"
-                                    value={searchQuery}
-                                    onChange={(e) => setSearchQuery(e.target.value)}
-                                    placeholder="Search country (e.g. Bangladesh, Japan)..."
-                                    className="w-full h-9 pl-9 pr-3 rounded-xl bg-background/70 border border-border/60 text-xs focus:outline-none focus:border-primary text-foreground placeholder:text-muted-foreground"
-                                />
-                            </div>
-
-                            {/* Continent Chips */}
-                            <div className="flex flex-wrap gap-1.5 mb-3 max-h-16 overflow-y-auto">
-                                {continents.map((continent) => (
-                                    <button
-                                        key={continent}
-                                        onClick={() => setActiveContinent(continent)}
-                                        className={`px-2.5 py-1 rounded-lg text-[11px] font-medium transition-colors cursor-pointer ${
-                                            activeContinent === continent
-                                                ? "bg-primary text-primary-foreground"
-                                                : "bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground"
-                                        }`}
-                                    >
-                                        {continent}
-                                    </button>
-                                ))}
-                            </div>
-
-                            {/* Scrollable Country Selector Results */}
-                            <div className="max-h-40 overflow-y-auto space-y-1.5 pr-1">
-                                {filteredCountries.slice(0, 15).map((country) => {
-                                    const isSelected = selectedCountry.id === country.id;
-                                    return (
-                                        <button
-                                            key={country.id}
-                                            onClick={() => handleSelectCountry(country)}
-                                            className={`w-full flex items-center justify-between px-3 py-1.5 rounded-xl text-xs transition-all cursor-pointer ${
-                                                isSelected
-                                                    ? "bg-primary text-primary-foreground font-semibold shadow-sm"
-                                                    : "bg-background/50 hover:bg-muted text-muted-foreground hover:text-foreground"
-                                            }`}
-                                        >
-                                            <span className="flex items-center gap-2">
-                                                <span>{country.flag}</span>
-                                                <span className="truncate max-w-[150px]">{country.name}</span>
-                                            </span>
-                                            <span className="text-[10px] opacity-75">
-                                                {country.continent}
-                                            </span>
-                                        </button>
-                                    );
-                                })}
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
