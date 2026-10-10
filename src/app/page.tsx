@@ -5,6 +5,7 @@ import { Technologies } from "@/components/home/Technologies";
 import { Contact } from "@/components/home/Contact";
 import Banner from "@/components/home/banner";
 import NewServices from "@/components/home/new_services";
+import WorldMap from "@/components/home/WorldMap";
 
 export default function Home() {
   return (
@@ -17,11 +18,11 @@ export default function Home() {
           {/* <Services /> */}
           {/* <Products /> */}
           <Portfolio />
+          <WorldMap />
           {/* <Technologies /> */}
           <Contact />
         </div>
       </div>
     </div>
-
   );
 }
